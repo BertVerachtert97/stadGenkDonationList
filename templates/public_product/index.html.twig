@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}donatielijst{% endblock %}
+
+{% block body %}
+    <h3 class="text-center">Kies een opvangplaats</h3>
+    <div class="row">
+        {% for environment in environments %}
+            <div class="col">
+                <div class="card">
+                    <img src="{{ asset('stadGenk.png') }}" class="card-img-top" alt="stad Genk logo"/>
+                    <div class="card-body">
+                        <h4 class="card-title text-center">{{ environment.name }}</h4>
+                    </div>
+                    <a href="{{ path('app_public_product_list', {environmentId: environment.id}) }}" class="stretched-link"></a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

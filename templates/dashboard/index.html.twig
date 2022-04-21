@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {% for environment in environments %}
+            <div class="col">
+                <div class="card">
+                    <img src="{{ asset('stadGenk.png') }}" class="card-img-top" alt="stad Genk logo"/>
+                    <div class="card-body">
+                        <h4 class="card-title text-center">{{ environment.name }}</h4>
+                    </div>
+                    <a href="{{ path('app_admin_product_list', {environmentId: environment.id}) }}" class="stretched-link"></a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row justify-content-center">
+        <a href="{{ path('app_logout') }}" class="btn btn-danger mt-2 w-25">Logout</a>
+    </div>
+{% endblock %}

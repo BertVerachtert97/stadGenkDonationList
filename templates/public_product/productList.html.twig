@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Productenlijst {{ data.environment.name }}{% endblock %}
+
+{% block body %}
+    <div class="row ">
+        <h2 class="text-center">
+            Productenlijst voor {{ data.environment.name }}
+            <a href="{{ path('app_public_product') }}" class="btn btn-primary float-end" style="width: 7rem">Terug</a>
+        </h2>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr class="table-active">
+                <th scope="col" class="text-center">Wat te doneren voor {{ data.environment.name }}</th>
+                <th scope="col" class="text-center">Aantal</th>
+                <th scope="col" class="text-center">Doneren</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if data.products is empty %}
+                <td colspan="3" class="text-center">Nog geen producten</td>
+            {% else %}
+                {% for product in data.products %}
+                    <tr>
+                        <td class="text-center">
+                            {% if product[0].clusterAmount is not empty%}
+                                {{ product[0].clusterAmount }} x
+                            {% endif %}
+                            {{ product[0].name }}</td>
+                        <td class="text-center">{{ product['currentAmount'] }}</td>
+                        <td class="text-center">
+                            <select class="form-control amountDropdown" id="{{ product[0].id }}">
+                                {% for i in 0..product['currentAmount'] %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                {% endfor%}
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            {% endif %}
+            </tbody>
+        </table>
+        {% if data.products is not empty %}
+            <input type="text" class="form-control w-50" id="name" placeholder="Voornaam">
+            <input type="text" class="form-control w-50 mt-2" id="surname" placeholder="Achternaam">
+            <p class="text-danger">Gelieve uw browser niet te sluiten na de donatie. Uw kan de gegevens hierna raadplagen. Gelieve deze ergens op te slaan.</p>
+            <a class="btn btn-primary float-end donationButton">Doneren</a>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        const donations = {};
+
+        $(".amountDropdown").change(function(e) {
+            if (this.value == 0) {
+                delete donations[e.target.id]
+            } else {
+                donations[e.target.id] = this.value;
+            }
+        });
+
+        $(".donationButton").click(function() {
+            var name = $("#name").val();
+            var surname = $("#surname").val();
+
+            if (!jQuery.isEmptyObject(donations) && name !== '' && surname !== '') {
+                var url = "{{ path('app_public_product_donatie', {environmentId: data.environment.id}) }}"
+                location.href = url + '?' + $.param(donations) + '&name=' + name + '&surname=' + surname
+            }
+        })
+    </script>
+{% endblock %}

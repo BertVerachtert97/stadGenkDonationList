@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Productenlijst {{ data.environment.name }}{% endblock %}
+
+{% block body %}
+    <div class="row ">
+        <h2 class="text-center">
+            Productenlijst voor {{ data.environment.name }}
+            <a href="{{ path('app_dashboard') }}" class="btn btn-primary float-end" style="width: 7rem">Terug</a>
+            <a href="{{ path('app_admin_donations', {environmentId: data.environment.id}) }}" class="btn btn-primary float-end" style="margin-right: 0.5rem">Donatie's bekijken</a>
+            <a href="{{ path('app_admin_product_create', {environmentId: data.environment.id}) }}" class="btn btn-success float-end" style="margin-right: 0.5rem">Nieuw Product</a>
+        </h2>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr class="table-active">
+                    <th scope="col" class="text-center">Naam</th>
+                    <th scope="col" class="text-center">Aantal</th>
+                    <th scope="col" class="text-center">Cluster aantal</th>
+                    <th scope="col" class="text-center">Aantal gedoneerd</th>
+                    <th scope="col" class="text-center">Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if data.products is empty %}
+                    <td colspan="4" class="text-center">Nog geen producten</td>
+                {% else %}
+                    {% for product in data.products %}
+                        <tr>
+                            <td>{{ product.name }}</td>
+                            <td class="text-center">{{ product.amount }}</td>
+                            <td class="text-center">{{ product.clusterAmount }}</td>
+                            <td class="text-center">{{ product.donatedAmount }}</td>
+                            <td class="text-center"><a href="{{ path('app_admin_product_edit', {environmentId: data.environment.id, id: product.id}) }}" class="btn btn-primary">Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
